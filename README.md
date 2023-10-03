@@ -8,3 +8,7 @@ FAT16
 CrazyBrow<-Browser do crazy
 .cog(Crazy os game file)<-Sim o SO terá alguns gameszinhos na
 Loja,que será uma das ultimas coisas.
+
+# É open-source?
+
+Talvez será,mas no momento compartilharei somente algumas dependencias assembly,as codf(Crazy OS Dependence File)

@@ -1,0 +1,33 @@
+;========================================
+;Crazy TIME MANIPULATION lib
+;========================================
+
+%IFNDEF _TIMEMNPLIB_
+%DEFINE _TIMEMNPLIB_
+
+
+%MACRO Timer 3
+	mov cx, %1
+	mov dx, %2
+	mov al, %3
+	mov bl, 0
+	call increase
+%ENDMACRO
+	increase:
+		inc bl
+		call WaitTime
+		cmp bl, al
+		jne increase
+	ret
+	
+		
+WaitTime:
+	pusha
+	mov ah, 86h
+	int 15h
+	popa
+ret
+
+
+
+%ENDIF

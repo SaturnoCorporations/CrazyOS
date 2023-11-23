@@ -1,0 +1,11 @@
+;========================================
+;Crazy KEYBOARD DETECTOR lib
+;========================================
+
+%IFNDEF _KEYBOARD_
+%DEFINE _KEYBOARD_
+
+
+
+
+%DEFINE

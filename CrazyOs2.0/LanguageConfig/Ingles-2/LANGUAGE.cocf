@@ -1,0 +1,26 @@
+;CrazyLanguageLib 
+%IFNDEF _CRAZYLANG_ 
+%DEFINE _CRAZYLANG_ 
+ 
+SysMesage1 db "Starting the System", 0 
+SysMesage2 db "You'll be", 0 
+SysMesage3 db "Crazy", 0 
+SysMesage4 db "Prepairing your Desktop...", 0 
+SysMesage5 db "Loading Personal Data...", 0 
+SysMenu1 db "Press F1 to Turn your PC off", 0 
+SysMenu2 db "Press F2 to see about the System", 0 
+SysMenu3 db "Press ESC to Return", 0 
+SysMenu4 db "Press Start Button to jump to Desktop", 0 
+SysMenu5 db "(Jump to Desktop can Crash your System)", 0 
+SysInfo1 db "FileSystem FAT16", 0 
+SysInfo2 db "System date:04\10\2023 18:51 AM", 0 
+SysInfo3 db "Developer:Rick Moreira", 0 
+SysInfo4 db "Press ESC to Return", 0 
+PowerMSG1 db "F1-Shutdown", 0 
+PowerMSG2 db "F2-Restart", 0 
+PowerMSG3 db "Turning Off...", 0 
+PowerMSG4 db "Restarting...", 0 
+Waiting db "Wait...", 0 
+ 
+%ENDIF 
+ 

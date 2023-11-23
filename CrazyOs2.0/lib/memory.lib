@@ -1,0 +1,22 @@
+; =============================================== 
+; AUTO GENERATED FILE - NOT CHANGE 
+; 
+; CrazyOS - Memory Library Routines 
+; Created by Autogen 
+; Version 1.0.0 
+; =============================================== 
+ 
+%IFNDEF _MEMORY_LIB_ 
+%DEFINE _MEMORY_LIB_ 
+ 
+%DEFINE SYSTEM 16 
+ 
+%DEFINE BOOTLOADER             0x7C00 
+%DEFINE BOOTLOADER_SECTOR      1 
+%DEFINE BOOTLOADER_NUM_SECTORS 1 
+%DEFINE KERNEL             0x0000 
+%DEFINE KERNEL_SECTOR      2 
+%DEFINE KERNEL_NUM_SECTORS 13 
+ 
+%ENDIF 
+ 

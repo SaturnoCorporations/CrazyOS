@@ -1,0 +1,107 @@
+;========================================
+;Crazy THEMEMANAGER lib
+;========================================
+
+%IFNDEF _THEMEMNGR_
+%DEFINE _THEMEMNGR_
+
+ThemeType db 0 ;It can be one of it:
+;0 Purpley with the purple vibe
+;1 Bluey with the blue vibe
+;2 Pinky,the theme that MAKE YOU BLIND!
+;3 Dark the darkness theme
+;4 Crazy Theme(When I say that its crazy,is because it is)
+
+;ThemeColors
+RecycleColor db 13
+StartMenuBackColor db 34
+UserIcoBack db 5
+StartMenuButtonsBackColor db 9
+
+;Vars
+StateTheme db 0
+InitTh db 0
+EndTh db 4
+
+ChngTh:
+	mov bl, byte[StateTheme]
+	cmp bl, byte[EndTh]
+	je Chng0
+	inc bl
+	jmp ChngTheme
+
+Chng0:
+	mov bl, byte[InitTh]
+	mov byte[RecycleColor], 13
+	mov byte[StartMenuBackColor], 34
+	mov byte[UserIcoBack], 5
+	mov byte[StartMenuButtonsBackColor], 9
+jmp ChngTheme
+
+ChngTheme:
+	mov byte[ThemeType], bl
+	call ThemeTypeChanger
+	mov byte[StartButtonState], 0
+	mov byte[VideoRestype], 0
+	jmp SYSCALLS3
+
+
+ThemeTypeChanger:
+	mov bl, byte[ThemeType]
+	mov byte[StateTheme], bl
+	cmp byte[ThemeType], 0
+	je Purpley
+	cmp byte[ThemeType], 1
+	je Bluey 
+	cmp byte[ThemeType], 2
+	je	Pinky
+	cmp byte[ThemeType], 3
+	je DarknessTheme
+	cmp byte[ThemeType], 4
+	je CrazyTheme
+ret
+
+
+Purpley:
+	mov word[LoadingBarColor], 5
+	mov byte[BackColor], 35
+ret
+
+Bluey:
+	mov byte[BackColor], 1
+	mov byte[RecycleColor], 11
+	mov byte[UserIcoBack], 32
+	mov byte[StartMenuBackColor], 33
+	mov byte[StartMenuButtonsBackColor], 11
+	mov word[LoadingBarColor], 33
+ret
+
+Pinky:
+	mov byte[BackColor], 13
+	mov byte[RecycleColor], 36
+	mov byte[UserIcoBack], 37
+	mov byte[StartMenuBackColor], 38
+	mov byte[StartMenuButtonsBackColor], 36
+	mov word[LoadingBarColor], 38
+ret
+
+DarknessTheme:
+	mov byte[BackColor], 18
+	mov byte[RecycleColor], 20
+	mov byte[UserIcoBack], 15
+	mov byte[StartMenuBackColor], 8
+	mov byte[StartMenuButtonsBackColor], 20
+	mov word[LoadingBarColor], 8	
+ret
+
+CrazyTheme:
+	mov byte[BackColor], 1
+	mov byte[RecycleColor], 2
+	mov byte[UserIcoBack], 3
+	mov byte[StartMenuBackColor], 4
+	mov byte[StartMenuButtonsBackColor], 5
+	mov word[LoadingBarColor], 6
+ret
+
+
+%ENDIF

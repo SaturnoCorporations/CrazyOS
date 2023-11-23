@@ -1,0 +1,26 @@
+;CrazyLanguageLib 
+%IFNDEF _CRAZYLANG_ 
+%DEFINE _CRAZYLANG_ 
+ 
+SysMesage1 db "Starten des Systems", 0 
+SysMesage2 db "Der Wahnsinn", 0 
+SysMesage3 db "erwartet Sie", 0 
+SysMesage4 db "Dein Bildschirm vorbereiten...", 0 
+SysMesage5 db "Hochladen lhrer Daten...", 0 
+SysMenu1 db "Drucken Sie F1 zum Ausschalten", 0 
+SysMenu2 db "Drucken Sie F2, um mehr zu sehen", 0 
+SysMenu3 db "Drucken Sie ESC, um zuruckzukehren", 0 
+SysMenu4 db "Drucken Sie die Starttaste, um zum", 0 
+SysMenu5 db "Desktop zu springen.", 0 
+SysInfo1 db "FileSystem FAT16", 0 
+SysInfo2 db "System date:04\10\2023 18:51 AM", 0 
+SysInfo3 db "Developer:Rick Moreira", 0 
+SysInfo4 db "Drucken Sie ESC, um zuruckzukehren", 0 
+PowerMSG1 db "F1-Trennen", 0 
+PowerMSG2 db "F2-Neustart", 0 
+PowerMSG3 db "Ausschalten...", 0 
+PowerMSG4 db "Neustart...", 0 
+Waiting db "Abwarten.", 0 
+ 
+%ENDIF 
+ 

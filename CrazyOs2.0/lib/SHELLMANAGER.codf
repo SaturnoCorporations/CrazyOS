@@ -1,0 +1,96 @@
+;========================================
+;Crazy SHELLMANAGER lib
+;========================================
+
+%IFNDEF _CRAZYSHELL_
+%DEFINE _CRAZYSHELL_
+
+Shell1 db "COSI Loaded Succesfully", 0
+Shell2 db "Crazy OS Shell Interpreter V1.0", 0
+Shell3 db "But,Who will use this?", 0
+
+PathMSG db "In some directory> ", 0
+
+CrazyShellInit:
+	pusha
+	Timer 0000h, 88B8h, 50
+	popa
+	mov byte[VideoRestype], 1
+	call VideoConfigure
+	mov bl, 0000_1110b
+	call COSITexts
+	xor al, al
+	call WaitForKey
+jmp ReturnToDesktop
+
+COSITexts:
+	mov byte[Line], 0
+	mov byte[Row], 0
+	CursorUpload
+
+	mov si, Shell1
+	call PrintStringText
+	
+	mov byte[Line], 1
+	mov byte[Row], 0
+	CursorUpload
+	
+	mov si, Shell2
+	call PrintStringText
+	
+	mov byte[Line], 3
+	mov byte[Row], 0
+	CursorUpload
+	
+	mov si, Shell3
+	call PrintStringText
+	
+	mov byte[Line], 5
+	mov byte[Row], 0
+	CursorUpload
+	
+	mov si, PathMSG
+	call PrintStringText
+ret
+
+ReturnToDesktop:
+	mov byte[StartButtonState], 0
+	mov byte[VideoRestype], 0
+	jmp SYSCALLS3
+	
+PrintStringText:
+	mov ah, 09h
+	mov bh, [PAGINATION]
+	mov cx, 1
+	mov al, [si]
+	printTXT:
+		int 10h
+		inc si
+		call IncrementColum
+		mov ah, 09h
+		mov al, [si]
+		cmp al, 0
+		jne printTXT
+ret
+
+IncrementColum:
+	pusha
+	mov cl, byte[Row]
+	inc cl
+	mov byte[Row], cl
+	CursorUpload
+	popa
+ret
+	
+WaitForKey:
+	mov ah, 0
+	int 16h
+	cmp al, 0
+	je WaitForKey
+	mov bl, 0100_1111b
+	xor al, al
+	call COSITexts
+	Timer 0000h, 88B8h, 50
+ret
+
+%ENDIF

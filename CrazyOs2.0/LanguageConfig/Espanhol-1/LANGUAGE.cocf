@@ -1,0 +1,26 @@
+;CrazyLanguageLib 
+%IFNDEF _CRAZYLANG_ 
+%DEFINE _CRAZYLANG_ 
+ 
+SysMesage1 db "Iniciando el Sistema", 0 
+SysMesage2 db "La Locura", 0 
+SysMesage3 db "Te espera", 0 
+SysMesage4 db "Preparando tu escritorio...", 0 
+SysMesage5 db "Cargando tus datos personales...", 0 
+SysMenu1 db "Presione F1 para Apagar", 0 
+SysMenu2 db "Presione F2 para ver sobre el sistema", 0 
+SysMenu3 db "Presione ESC para Regresar", 0 
+SysMenu4 db "Presione BOTON INICIO para saltar ao", 0 
+SysMenu5 db "Escritorio.", 0 
+SysInfo1 db "FileSystem FAT16", 0 
+SysInfo2 db "System date:04\10\2023 18:51 AM", 0 
+SysInfo3 db "Developer:Rick Moreira", 0 
+SysInfo4 db "Presione ESC para Regresar", 0 
+PowerMSG1 db "F1-Apagar", 0 
+PowerMSG2 db "F2-Reanudar", 0 
+PowerMSG3 db "Apagando...", 0 
+PowerMSG4 db "Reiniciando...", 0 
+Waiting db "Esperar..", 0 
+ 
+%ENDIF 
+ 

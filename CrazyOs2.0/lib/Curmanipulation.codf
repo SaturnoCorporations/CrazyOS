@@ -1,0 +1,76 @@
+;========================================
+;Crazy CURSOR MANIPULATION lib
+;========================================
+
+%IFNDEF _CURMANLIB_
+%DEFINE _CURMANLIB_
+
+Line db 0
+Row db 0
+SaveLine db 0
+SaveRow db 0
+PAGINATION db 0
+Operation db 0
+NumberOp db 0
+
+%MACRO CursorReset 0
+	mov byte[PAGINATION], 0
+	mov byte[Line], 0
+	mov byte[Row], 0
+	mov byte[SaveLine], 0
+	mov byte[SaveRow], 0
+	mov ah, 0x02
+	mov bh, BYTE[PAGINATION]
+	mov dh, BYTE[Line]
+	mov dl, BYTE[Row]
+	int 10h
+%ENDMACRO
+
+%MACRO IncLine 0
+	mov ah, 0x02
+	mov bh, PAGINATION
+	inc byte[Line]
+	mov dh, byte[Line]
+	mov dl, BYTE[Row]
+	int 10h
+%ENDMACRO
+
+
+%MACRO DecLine 0
+	mov ah, 0x02
+	mov bh, PAGINATION
+	dec byte[Line]
+	mov dh, byte[Line]
+	mov dl, BYTE[Row]
+	int 10h
+%ENDMACRO
+
+%MACRO IncRow 0
+	mov ah, 0x02
+	mov bh, PAGINATION
+	inc byte[Row]
+	mov dl, byte[Row]
+	mov dh, BYTE[Line]
+	int 10h
+%ENDMACRO
+
+%MACRO DecRow 0
+	mov ah, 0x02
+	mov bh, PAGINATION
+	dec byte[Row]
+	mov dl, byte[Row]
+	mov dh, BYTE[Line]
+	int 10h
+%ENDMACRO
+
+%MACRO CursorUpload 0
+	pusha
+	mov ah, 0x02
+	mov bh, BYTE[PAGINATION]
+	mov dh, BYTE[Line]
+	mov dl, BYTE[Row]
+	int 10h
+	popa
+%ENDMACRO
+
+%endif

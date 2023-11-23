@@ -1,0 +1,1114 @@
+;========================================
+;Crazy DESKTOPMANAGER lib
+;========================================
+
+%IFNDEF _DESKMNGR_
+%DEFINE _DESKMNGR_
+
+%DEFINE SAVEICONSCOLOR 0x850
+
+Hour db 2 dup(0)
+Minutes db 2 dup(0)
+TwoDots db ":", 0
+Day db 0
+Month db 0
+Year db 0
+DateTimeSet db "7:00"
+
+SquaryEnable db 1
+
+StartMenuOpen db 0
+StateShutdownScreen db 0
+
+MouseXSave dw 0000h
+MouseYSave dw 0000h
+
+WinXSV dw 0000h
+WinYSV dw 0000h
+
+QuantIcons db 1
+QuantTab db 0
+
+
+StateWifiIcon db 2 ;3 (Desligado,Conectado,Desconectado)
+StateBateryIcon db 0 ;3 (Desconectada,Carregando,Carregada)
+StateVolumeIcon db 0 ;5 (mudo, baixo, medio, alto, e desconetado)
+
+StateButtonPower db 0
+
+DrawSquary:
+	cmp byte[SquaryEnable], 0
+	je Ret2
+	mov ah, 0ch
+	mov dx, word[BackHeight]
+	sub dx, 11
+	mov al, 0
+	mov cx, word[BackWidht]
+	sub cx, 15
+	int 10h
+	inc cx
+	int 10h
+	inc cx
+	int 10h
+	add cx, 3
+	int 10h
+	inc cx
+	int 10h
+	inc cx
+	int 10h
+	mov cx, word[BackWidht]
+	sub cx, 15
+	add cx, 2
+	dec dx 
+	int 10h
+	add cx, 5
+	int 10h
+	dec dx
+	mov al, byte[UserIcoBack]
+	int 10h
+	sub cx, 4
+	int 10h
+	dec dx
+	int 10h
+	dec cx
+	int 10h
+	add cx, 4
+	int 10h
+	inc cx
+	int 10h
+	mov ax, word[BackWidht]
+	mov bx, word[BackHeight]
+	sub ax, 16
+	sub bx, 23
+	mov word[LoadingBarPositionX], ax
+	mov word[LoadingBarPositionY], bx
+	mov word[LoadingBarWidht], 11
+	mov word[LoadingBarHeight], 9
+	mov bl, byte[UserIcoBack]
+	mov byte[LoadingBarColor], bl
+	call PutYourPosition2
+	mov ah, 0ch
+	mov al, 0
+	mov cx, word[BackWidht]
+	mov dx, word[BackHeight]
+	sub cx, 16
+	sub dx, 23
+	add dx, 2
+	inc cx
+	int 10h
+	add cx, 3
+	int 10h
+	sub cx, 2
+	add dx, 2
+	int 10h
+ret
+
+ResetSquaryFace:
+	mov ax, word[BackWidht]
+	mov bx, word[BackHeight]
+	sub ax, 16
+	sub bx, 23
+	mov word[LoadingBarPositionX], ax
+	mov word[LoadingBarPositionY], bx
+	mov word[LoadingBarWidht], 11
+	mov word[LoadingBarHeight], 9
+	mov bl, byte[UserIcoBack]
+	mov byte[LoadingBarColor], bl
+	call PutYourPosition2
+ret
+
+SquaryDeath: ;Shutdown or Restart
+	cmp byte[SquaryEnable], 0
+	je Ret2
+	mov ah, 0ch
+	mov dx, word[BackHeight]
+	mov al, 0
+	mov cx, word[BackWidht]
+	sub cx, 15
+	int 10h
+	inc cx
+	int 10h
+	inc cx
+	int 10h
+	add cx, 3
+	int 10h
+	inc cx
+	int 10h
+	inc cx
+	int 10h
+	mov cx, word[BackWidht]
+	sub cx, 15
+	add cx, 2
+	dec dx 
+	int 10h
+	add cx, 5
+	int 10h
+	dec dx
+	mov al, byte[UserIcoBack]
+	int 10h
+	sub cx, 4
+	int 10h
+	dec dx
+	int 10h
+	dec cx
+	int 10h
+	add cx, 4
+	int 10h
+	inc cx
+	int 10h
+	mov ax, word[BackWidht]
+	mov bx, word[BackHeight]
+	sub ax, 16
+	sub bx, 13;23
+	mov word[LoadingBarPositionX], ax
+	mov word[LoadingBarPositionY], bx
+	mov word[LoadingBarWidht], 11
+	mov word[LoadingBarHeight], 9
+	mov bl, byte[UserIcoBack]
+	mov byte[LoadingBarColor], bl
+	call PutYourPosition2
+	mov ah, 0ch
+	mov al, 0
+	mov cx, word[BackWidht]
+	mov dx, word[BackHeight]
+	sub cx, 16
+	sub dx, 13;23
+	add dx, 3
+	add cx, 2
+	int 10h
+	inc cx
+	dec dx
+	int 10h
+	sub cx, 2
+	int 10h
+	add dx, 2
+	int 10h
+	add cx, 2
+	int 10h
+	add cx, 3
+	int 10h
+	inc cx
+	dec cx
+	int 10h
+	inc cx 
+	inc dx
+	int 10h
+	sub dx, 2
+	int 10h
+	sub cx, 2
+	int 10h
+ret
+
+SetSquarySad: ;:-(
+	cmp byte[SquaryEnable], 0
+	je Ret2
+	call ResetSquaryFace
+	mov ah, 0ch
+	mov al, 0
+	mov cx, word[BackWidht]
+	mov dx, word[BackHeight]
+	sub cx, 16
+	sub dx, 23
+	add dx, 2
+	inc cx
+	int 10h
+	add cx, 3
+	int 10h
+	add dx, 2
+	int 10h
+	dec cx
+	int 10h
+	dec cx
+	inc dx
+	int 10h
+	add cx, 3
+	int 10h
+ret
+
+
+ShowHour:
+	call GetBiosTime
+	mov si, Hour
+	call MovCURSOROFDATE
+	call PrintStringy
+	mov si, TwoDots
+	mov byte[Row], 72
+	CursorUpload
+	call PrintStringy
+	mov si, Minutes
+	mov byte[Row], 73
+	CursorUpload
+	call PrintStringy
+ret
+	
+GetBiosTime:
+ret
+	
+PrintStringy:
+	pusha
+	mov ah, 09h
+	mov bh, [PAGINATION]
+	mov cx, 1
+	mov al, [si]
+	printy:
+		int 10h
+		inc si
+		IncRow
+		mov ah, 09h
+		mov al, [si]
+		cmp al, 0
+		jne printy
+	popa
+ret
+
+MovCURSOROFDATE:
+	mov byte[Line], 24
+	mov byte[Row], 71
+	CursorUpload
+	mov bl, 15
+ret
+
+LoadIconsInBar:
+	call WifiIconBarConfigure
+	;call BateryIconBarConfigure
+	;call VolumeIconBarConfigure
+ret
+
+
+WifiIconBarConfigure:
+	call DrawWifiBase
+	mov al, byte[StateWifiIcon]
+	cmp al, 0
+	je Wifi0
+	cmp al, 1
+	je Wifi1
+	cmp al, 2
+	je Wifi2
+ret
+
+DrawWifiBase:
+	mov ah, 0Ch
+	mov cx, word[BackWidht];widht
+	mov dx, word[BackHeight];height
+	mov al, 1
+	sub dx, 3
+	sub cx, 7
+	int 10h
+	dec dx
+	int 10h
+	mov dx, [BackHeight]
+	sub dx, 3
+	inc cx
+	int 10h
+	dec dx
+	int 10h
+	dec dx
+	int 10h
+	mov dx, [BackHeight]
+	sub dx, 3
+	inc cx
+	int 10h
+	dec dx
+	int 10h
+	dec dx
+	int 10h
+	dec dx
+	int 10h
+	mov al, 0
+	mov dx, [BackHeight]
+	inc cx
+	sub dx, 3
+	int 10h
+	dec dx
+	int 10h
+	dec dx
+	int 10h
+	dec dx
+	int 10h
+ret
+
+
+Wifi0:
+	mov ah, 0Ch
+	mov cx, word[BackWidht]
+	mov dx, word[BackHeight]
+	mov al, 4
+	sub cx, 7
+	sub dx, 7
+	int 10h
+ret
+		
+		
+Wifi1:
+	mov ah, 0Ch
+	mov cx, word[BackWidht]
+	mov dx, word[BackHeight]
+	mov al, 2
+	sub cx, 7
+	sub dx, 7
+	int 10h
+ret
+
+
+Wifi2:
+	mov ah, 0Ch
+	mov cx, word[BackWidht]
+	mov dx, word[BackHeight]
+	mov al, 12
+	sub cx, 7
+	sub dx, 3
+	int 10h
+	dec dx
+	dec dx
+	int 10h
+	inc cx
+	dec dx
+	int 10h
+	dec dx
+	int 10h
+	dec dx
+	dec cx
+	int 10h
+	dec cx
+	int 10h
+	dec cx
+	int 10h
+	dec cx
+	inc dx
+	int 10h
+ret
+
+
+
+DrawRecycleBin:
+	mov bx, 1
+	mov ax, 1
+	mov word[LoadingBarPositionX], ax
+	mov word[LoadingBarPositionY], bx
+	mov word[LoadingBarWidht], 11
+	mov word[LoadingBarHeight], 11
+	mov byte[LoadingBarColor], 0
+	call PutYourPosition2
+	mov bx, 1
+	mov ax, 1
+	mov word[LoadingBarPositionX], ax
+	mov word[LoadingBarPositionY], bx
+	mov word[LoadingBarWidht], 10
+	mov word[LoadingBarHeight], 10
+	mov bl, byte[RecycleColor]
+	mov byte[LoadingBarColor], bl
+	call PutYourPosition2
+	call DrawRecycleIcon
+ret
+
+DrawRecycleIcon:
+	mov ah, 0Ch
+	mov cx, 7
+	mov dx, 4
+	mov al, 2
+	int 10h
+	inc dx
+	inc cx
+	int 10h
+	inc dx
+	inc cx
+	mov al, 10
+	int 10h
+	mov al, 2
+	inc dx
+	dec cx
+	int 10h
+	dec cx
+	int 10h
+	dec cx
+	int 10h
+	dec cx
+	int 10h
+	dec cx
+	int 10h
+	mov al, 10
+	dec cx
+	dec dx
+	int 10h
+	mov al, 2
+	dec dx
+	inc cx
+	int 10h
+	dec dx
+	inc cx
+	int 10h
+	dec dx
+	inc cx
+	mov al, 10
+ret
+
+
+
+KeyPress:
+	Timer 0000h, 3A98h, 7
+	in al, 0x64
+	out 0x64, al
+	in al, 0x60
+	cmp al, 0x5B;0x1D
+	je StartMenu
+	cmp al, 0x1D
+	je CtrlFunctions
+jmp KeyPress
+
+CtrlFunctions:
+	mov bl, 0
+	CtrlLOOP:
+	inc bl
+	in al, 0x64
+	out 0x64, al
+	in al, 0x60
+	cmp al, 0x38
+	je CtrlAltMenu
+	cmp al, 0x5B
+	je ChangeTheme
+	pusha
+	Timer 0000h, 03E8h, 12
+	popa
+	cmp bl, 70
+	jne CtrlLOOP
+jmp KeyPress
+
+ChangeTheme:
+	mov word[LoadingBarWidht], 80
+	mov word[LoadingBarHeight], 75
+	mov byte[LoadingBarColor], 0
+	call CreateCentralWindow
+	mov word[LoadingBarWidht], 79
+	mov word[LoadingBarHeight], 74
+	mov byte[LoadingBarColor], 15
+	call CreateCentralWindow
+	mov word[LoadingBarWidht], 78
+	mov word[LoadingBarHeight], 73
+	mov bl, byte[StartMenuBackColor]
+	mov byte[LoadingBarColor], bl
+	call CreateCentralWindow
+	mov byte[Line], 12
+	mov byte[Row], 16
+	mov bl, byte[RecycleColor]
+	CursorUpload
+	mov si, Waiting
+	call PrintString2
+	mov bl, 0
+	ChngThLoop:
+		pusha
+		Timer 0000h, 88B8h, 25
+		popa 
+		inc bl
+		cmp bl, 3
+		jne ChngThLoop
+		jmp ChngTh
+	
+CtrlAltMenu:
+	mov word[LoadingBarWidht], 150
+	mov word[LoadingBarHeight], 110
+	mov byte[LoadingBarColor], 15
+	call CreateCentralWindow
+	mov word[LoadingBarWidht], 146
+	mov word[LoadingBarHeight], 106
+	mov byte[LoadingBarColor], 0
+	call CreateCentralWindow
+	CtrlAltMenuLoop:
+		in al, 0x64
+		out 0x64, al
+		in al, 0x60
+		cmp al, 0x01
+		jne CtrlAltMenuLoop
+		je ExitCtrlAltMenu
+
+ExitCtrlAltMenu:
+	mov word[LoadingBarWidht], 150
+	mov word[LoadingBarHeight], 110
+	mov bl, byte[BackColor]
+	mov byte[LoadingBarColor], bl
+	call CreateCentralWindow
+jmp KeyPress
+	
+StartMenu:
+	Timer 0000h, 3A98h, 5
+	mov al, byte[StartMenuOpen]
+	cmp al, 0
+	je OpenStartMenu
+	jne CloseStartMenu
+jmp KeyPress
+
+
+
+
+CloseStartMenu:
+	call StartButtonDrawClose
+	mov al, 0
+	mov byte[StartMenuOpen], al
+	mov bx, word[BackHeight]
+	mov ax, 0
+	sub bx, 94
+	mov word[LoadingBarPositionX], ax
+	mov word[LoadingBarPositionY], bx
+	mov word[LoadingBarWidht], 65
+	mov word[LoadingBarHeight], 84
+	mov bl, byte[BackColor]
+	mov byte[LoadingBarColor], bl
+	call PutYourPosition2
+jmp KeyPress
+
+OpenStartMenu:
+	call StartButtonDrawOpen
+	mov al, 1
+	mov byte[StartMenuOpen], al
+	mov bx, word[BackHeight]
+	mov ax, 0
+	sub bx, 94
+	mov word[LoadingBarPositionX], ax
+	mov word[LoadingBarPositionY], bx
+	mov word[LoadingBarWidht], 65
+	mov word[LoadingBarHeight], 84
+	mov byte[LoadingBarColor], 15
+	call PutYourPosition2
+	mov bx, word[BackHeight]
+	mov ax, 0
+	sub bx, 94
+	inc ax 
+	inc bx
+	mov word[LoadingBarPositionX], ax
+	mov word[LoadingBarPositionY], bx
+	mov word[LoadingBarWidht], 64
+	mov word[LoadingBarHeight], 83
+	mov byte[LoadingBarColor], 0
+	call PutYourPosition2
+	mov bx, word[BackHeight]
+	mov ax, 0
+	sub bx, 94
+	mov word[LoadingBarWidht], 63
+	mov word[LoadingBarHeight], 82
+	mov bl, byte[StartMenuBackColor]
+	mov byte[LoadingBarColor], bl
+	call PutYourPosition2
+	call StartMenuDrawer
+jmp KeyPress
+
+StartButtonDrawOpen:
+	mov word[LoadingBarPositionX], 1
+	mov ax, word[BackHeight]
+	sub ax, 9
+	mov word[LoadingBarPositionY], ax
+	mov word[LoadingBarWidht], 8
+	mov word[LoadingBarHeight], 8
+	xor ax, ax
+	mov byte[LoadingBarColor], 0
+	call PutYourPosition2
+	;WhiteBorder
+	mov word[LoadingBarPositionX], 2
+	mov ax, word[BackHeight]
+	sub ax, 8
+	mov word[LoadingBarPositionY], ax
+	mov word[LoadingBarWidht], 7
+	mov word[LoadingBarHeight], 7
+	xor ax, ax
+	mov byte[LoadingBarColor], 15
+	call PutYourPosition2
+	mov word[LoadingBarPositionX], 2
+	mov ax, word[BackHeight]
+	sub ax, 8
+	mov word[LoadingBarPositionY], ax
+	mov word[LoadingBarWidht], 6
+	mov word[LoadingBarHeight], 6
+	xor ax, ax
+	mov bl, byte[RecycleColor]
+	mov byte[LoadingBarColor], bl
+	call PutYourPosition2
+ret
+
+StartButtonDrawClose:
+	mov word[LoadingBarPositionX], 1
+	mov ax, word[BackHeight]
+	sub ax, 9
+	mov word[LoadingBarPositionY], ax
+	mov word[LoadingBarWidht], 8
+	mov word[LoadingBarHeight], 8
+	xor ax, ax
+	mov byte[LoadingBarColor], 15
+	call PutYourPosition2
+	;WhiteBorder
+	mov word[LoadingBarPositionX], 2
+	mov ax, word[BackHeight]
+	sub ax, 8
+	mov word[LoadingBarPositionY], ax
+	mov word[LoadingBarWidht], 7
+	mov word[LoadingBarHeight], 7
+	xor ax, ax
+	mov byte[LoadingBarColor], 0
+	call PutYourPosition2
+	mov word[LoadingBarPositionX], 2
+	mov ax, word[BackHeight]
+	sub ax, 8
+	mov word[LoadingBarPositionY], ax
+	mov word[LoadingBarWidht], 6
+	mov word[LoadingBarHeight], 6
+	xor ax, ax
+	mov bl, byte[RecycleColor]
+	mov byte[LoadingBarColor], bl
+	call PutYourPosition2
+ret
+
+
+
+StartMenuDrawer:
+	mov bx, word[BackHeight]
+	mov ax, 41
+	sub bx, 93
+	mov word[LoadingBarPositionX], ax
+	mov word[LoadingBarPositionY], bx
+	mov word[LoadingBarWidht], 23
+	mov word[LoadingBarHeight], 82
+	mov al, byte[StartMenuButtonsBackColor]
+	mov byte[LoadingBarColor], al
+	call PutYourPosition2
+	mov bx, word[BackHeight]
+	mov ax, 48
+	sub bx, 92
+	mov word[LoadingBarPositionX], ax
+	mov word[LoadingBarPositionY], bx
+	mov word[LoadingBarWidht], 10
+	mov word[LoadingBarHeight], 10
+	mov byte[LoadingBarColor], 0
+	call PutYourPosition2
+	mov bx, word[BackHeight]
+	mov ax, 48
+	sub bx, 92
+	mov word[LoadingBarPositionX], ax
+	mov word[LoadingBarPositionY], bx
+	mov word[LoadingBarWidht], 9
+	mov word[LoadingBarHeight], 9
+	mov bl, byte[UserIcoBack]
+	mov byte[LoadingBarColor], bl
+	call PutYourPosition2
+	call DrawUserImage
+	call PowerMenu
+	call StartIcons
+	Timer 0000h, 1388h, 125
+	call StartMenuFunctions
+ret
+
+
+DrawUserImage:
+	mov dx, word[BackHeight]
+	mov cx, 48
+	add cx, 1
+	sub dx, 92
+	mov ah, 0Ch
+	mov al, 0
+	inc dx
+	add cx, 4
+	int 10h
+	inc cx
+	int 10h
+	sub cx, 2
+	inc dx
+	int 10h
+	add cx, 2
+	int 10h
+	inc dx
+	int 10h
+	sub cx, 3
+	int 10h
+	inc dx
+	int 10h
+	inc cx
+	int 10h
+	inc cx
+	int 10h
+	inc cx
+	int 10h
+	inc cx
+	inc dx
+	int 10h
+	sub cx, 5
+	int 10h
+	dec cx
+	inc dx
+	int 10h
+	inc dx
+	int 10h
+	inc dx
+	int 10h
+	inc dx
+	int 10h
+	add cx, 7
+	int 10h
+	dec dx
+	int 10h
+	dec dx
+	int 10h
+	dec dx
+	int 10h
+ret
+
+StartMenuFunctions:
+	;Timer 0000h, 00FAh, 1
+	in al, 0x64
+	out 0x64, al
+	in al, 0x60
+	cmp al, 0x58;0x1D
+	je PowerMenuPrepair
+	cmp al, 0x5B
+	je Ret2
+	cmp al, 0x44
+	je MouseConfig
+jmp StartMenuFunctions
+
+MouseConfig:
+	mov ah, 0  ;text screen mode
+	mov al, 13h
+	int  0x10
+	MOV     AX, CS             ;*
+	MOV     DS, AX             ;*
+	MOV     ES, AX
+	call MAINPS2m
+	mouseLoop:
+	call mainMOUSE
+jmp mouseLoop
+
+ReturnMouse:
+	mov byte[StartButtonState], 0
+	mov byte[VideoRestype], 0
+	call BaseUI
+	jmp KeyPress
+
+PowerMenuPrepair:
+	;call SetSquarySad
+	mov bx, word[BackHeight]
+	mov ax, 43
+	sub bx, 30
+	mov word[LoadingBarPositionX], ax
+	mov word[LoadingBarPositionY], bx
+	mov word[LoadingBarWidht], 19
+	mov word[LoadingBarHeight], 10
+	mov byte[LoadingBarColor], 15
+	call PutYourPosition2
+	mov bx, word[BackHeight]
+	mov ax, 43
+	sub bx, 30
+	mov word[LoadingBarPositionX], ax
+	mov word[LoadingBarPositionY], bx
+	mov word[LoadingBarWidht], 18
+	mov word[LoadingBarHeight], 9
+	mov byte[LoadingBarColor], 0
+	call PutYourPosition2
+	mov bx, word[BackHeight]
+	mov ax, 44
+	sub bx, 29
+	mov word[LoadingBarPositionX], ax
+	mov word[LoadingBarPositionY], bx
+	mov word[LoadingBarWidht], 17
+	mov word[LoadingBarHeight], 8
+	mov bl, byte[StartMenuBackColor]
+	mov byte[LoadingBarColor], bl
+	call PutYourPosition2
+	call DrawPowerIcon
+    call PowerWindow
+	call PowerSelect
+jmp StartMenuFunctions
+
+PowerMenu:
+	mov bx, word[BackHeight]
+	mov ax, 43
+	sub bx, 30
+	mov word[LoadingBarPositionX], ax
+	mov word[LoadingBarPositionY], bx
+	mov word[LoadingBarWidht], 19
+	mov word[LoadingBarHeight], 10
+	mov byte[LoadingBarColor], 0
+	call PutYourPosition2
+	mov bx, word[BackHeight]
+	mov ax, 43
+	sub bx, 30
+	mov word[LoadingBarPositionX], ax
+	mov word[LoadingBarPositionY], bx
+	mov word[LoadingBarWidht], 18
+	mov word[LoadingBarHeight], 9
+	mov byte[LoadingBarColor], 15
+	call PutYourPosition2
+	mov bx, word[BackHeight]
+	mov ax, 44
+	sub bx, 29
+	mov word[LoadingBarPositionX], ax
+	mov word[LoadingBarPositionY], bx
+	mov word[LoadingBarWidht], 17
+	mov word[LoadingBarHeight], 8
+	mov bl, byte[StartMenuBackColor]
+	mov byte[LoadingBarColor], bl
+	call PutYourPosition2
+	call DrawPowerIcon
+ret
+
+DrawPowerIcon:
+	mov dx, word[BackHeight]
+	sub dx, 28
+	mov cx, 51
+	mov ah, 0Ch
+	mov al, 0
+	int 10h
+	inc cx
+	int 10h
+	inc cx
+	int 10h
+	inc cx
+	inc dx
+	int 10h
+	inc cx
+	inc dx
+	int 10h
+	inc dx
+	int 10h
+	inc dx
+	int 10h
+	dec cx
+	inc dx
+	int 10h
+	dec cx
+	inc dx 
+	int 10h
+	dec cx
+	int 10h
+	dec cx
+	int 10h
+	dec cx
+	dec dx
+	int 10h
+	dec cx
+	dec dx
+	int 10h
+	dec dx
+	int 10h
+	dec dx
+	int 10h
+	dec dx
+	inc cx
+	int 10h
+	;BluePart
+	mov dx, word[BackHeight]
+	sub dx, 27
+	mov cx, 51
+	mov ah, 0Ch
+	inc cx
+	mov al, 1
+	int 10h
+	inc dx
+	int 10h
+	sub dx, 2
+	int 10h
+	dec dx
+	int 10h
+ret
+
+Ret2:
+ret
+
+
+PowerWindow:
+	mov word[LoadingBarWidht], 100
+	mov word[LoadingBarHeight], 60
+	mov byte[LoadingBarColor], 15
+	call CreateCentralWindow
+	mov word[LoadingBarWidht], 96
+	mov word[LoadingBarHeight], 56
+	mov byte[LoadingBarColor], 0
+	call CreateCentralWindow
+ret
+
+PowerSelect:
+	mov byte[Line], 11
+	mov byte[Row], 15
+	CursorUpload
+	mov bl, byte[UserIcoBack]
+	mov si, PowerMSG1
+	call PrintString2
+	mov byte[Line], 12
+	mov byte[Row], 15
+	CursorUpload
+	mov bl, byte[UserIcoBack]
+	mov si, PowerMSG2
+	call PrintString2
+	Timer 0000h, 3A98h, 14
+	PowerLoop:
+		in al, 0x64
+		out 0x64, al
+		in al, 0x60
+		cmp al, 0x3B
+		je ConfirmShutdownScreen
+		cmp al, 0x3C
+		je ConfirmRestartScreen
+		jne ConfirmPowerExit
+	jmp PowerLoop
+ret
+
+ConfirmShutdownScreen:
+	mov byte[Line], 11
+	mov byte[Row], 15
+	CursorUpload
+	mov bl, 1
+	mov si, PowerMSG1
+	call PrintString2
+	Timer 0000h, 3A98h, 9
+	in al, 0x64
+	out 0x64, al
+	in al, 0x60
+	cmp al, 0x1C
+	je ShutdownScreen
+	cmp al, 0x01
+	je StartMenuPrepairClosePower
+	jne ConfirmShutdownScreen
+	
+	
+ConfirmRestartScreen:
+	mov byte[Line], 12
+	mov byte[Row], 15
+	CursorUpload
+	mov bl, 1
+	mov si, PowerMSG2
+	call PrintString2
+	Timer 0000h, 3A98h, 9
+	in al, 0x64
+	out 0x64, al
+	in al, 0x60
+	cmp al, 0x1C
+	je RestartScreen
+	cmp al, 0x01
+	je StartMenuPrepairClosePower
+	jne ConfirmRestartScreen
+
+ShutdownScreen:
+	Timer 0000h, 61A8h, 20
+	mov byte[BackColor], 0
+	call VideoConfigure
+	call DrawBackgroundWallpaper
+	call SquaryDeath
+	mov byte[Line], 0
+	mov byte[Row], 0
+	CursorUpload
+	mov si, PowerMSG3
+	mov bl, byte[RecycleColor]
+	call PrintString2
+	ShutLoop:
+		mov al, byte[StateShutdownScreen]
+		inc al
+		mov byte[StateShutdownScreen], al
+		cmp al, 255
+		je PowerF1
+		Timer 0000h, 1117h, 9
+		jmp ShutLoop
+		
+RestartScreen:
+	Timer 0000h, 61A8h, 20
+	mov byte[BackColor], 0
+	call VideoConfigure
+	call DrawBackgroundWallpaper
+	call SquaryDeath
+	mov byte[Line], 0
+	mov byte[Row], 0
+	CursorUpload
+	mov si, PowerMSG4
+	mov bl, byte[RecycleColor]
+	call PrintString2
+	ResLoop:
+		mov al, byte[StateShutdownScreen]
+		inc al
+		mov byte[StateShutdownScreen], al
+		cmp al, 255
+		je PowerF2
+		Timer 0000h, 1117h, 9
+		jmp ResLoop
+
+		
+PowerF1:
+	mov byte[StateShutdownScreen], 0
+	mov byte[StartButtonState], 0
+	mov ah, 53h
+	mov al, 07h
+	mov bx, 0001h
+	mov cx, 03h
+int 15h
+
+PowerF2:
+	mov ax, 0040h
+	mov ds, ax
+	mov ax, 1234h
+	mov [0072h], ax
+	jmp 0FFFFh:0000h
+
+ConfirmPowerExit:
+	cmp al, 0x01
+	je StartMenuPrepairClosePower
+	jne PowerLoop
+
+StartMenuPrepairClosePower:
+	call DrawSquary
+	mov word[LoadingBarWidht], 100
+	mov word[LoadingBarHeight], 60
+	mov al, byte[BackColor]
+	mov byte[LoadingBarColor],  al
+	call CreateCentralWindow
+	call StartMenu
+ret
+
+CreateCentralWindow:
+	mov ax, word[BackWidht]
+	mov bx, 2
+	xor dx, dx
+	div bx
+	push ax
+	mov ax, word[LoadingBarWidht]
+	mov bx, 2
+	xor dx, dx
+	div bx
+	mov cx, ax
+	pop ax
+	sub ax, cx
+	mov word[LoadingBarPositionX], ax
+	xor ax, ax
+	xor cx, cx
+	xor bx, bx
+	xor dx, dx
+	mov ax, word[BackHeight]
+	mov bx, 2
+	xor dx, dx
+	div bx
+	push ax
+	mov ax, word[LoadingBarHeight]
+	mov bx, 2
+	xor dx, dx
+	div bx
+	mov cx, ax
+	pop ax
+	sub ax, cx
+	mov word[LoadingBarPositionY], ax
+	call PutYourPosition2
+ret
+
+StartIcons:
+	mov bx, word[BackHeight]
+	mov ax, 3
+	sub bx, 92
+	mov word[LoadingBarPositionX], ax
+	mov word[LoadingBarPositionY], bx
+	mov word[LoadingBarWidht], 8
+	mov word[LoadingBarHeight], 8
+	mov byte[LoadingBarColor], 0
+	call PutYourPosition2
+	mov bx, word[BackHeight]
+	mov ax, 3
+	sub bx, 92
+	mov word[LoadingBarPositionX], ax
+	mov word[LoadingBarPositionY], bx
+	mov word[LoadingBarWidht], 7
+	mov word[LoadingBarHeight], 7
+	mov byte[LoadingBarColor], 7
+	mov byte[SAVEICONSCOLOR], 7
+	call PutYourPosition2
+ret
+
+%ENDIF

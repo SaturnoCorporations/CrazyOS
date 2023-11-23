@@ -1,0 +1,63 @@
+;========================================
+;Crazy VIDEOCONFIGURATIONS lib
+;========================================
+
+%IFNDEF _VDCFG_
+%DEFINE _VDCFG_
+
+BackWidht dw 0000h
+BackHeight dw 0000h
+BackColor db 0 ;Cor de fundo
+Pagination db 0
+CursorX db 15
+CursorY db 12
+State db 0
+VideoRestype db 0
+
+VideoConfigure:
+	cmp byte[VideoRestype], 0
+	je SetVideoModeVGA
+	cmp byte[VideoRestype], 1
+	je SetVideoModeText
+ret
+
+SetVideoModeVGA:
+	mov ah, 00h
+	mov al, 13h
+	int 10h
+	mov ax, 320
+	mov WORD[BackWidht], ax
+	mov ax, 200
+	mov WORD[BackHeight], ax
+	call DrawPixelConfig
+ret
+
+SetVideoModeText:
+	mov ah, 00h
+	mov al, 03h
+	int 10h
+	mov byte[BackWidht], 80
+	mov byte[BackHeight], 20
+ret
+
+
+DrawPixelConfig:
+	mov ah, 0Ch
+	mov al, [BackColor]
+	mov cx, 0
+	mov dx, 0
+ret
+
+DrawBackground:
+	int 10h
+	inc cx
+	cmp cx, WORD[BackWidht]
+	jne DrawBackground
+	mov cx, 0
+	inc dx
+	cmp dx, WORD[BackHeight]
+	jne DrawBackground
+	mov dx, 0
+ret
+
+%ENDIF

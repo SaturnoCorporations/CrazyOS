@@ -1,7 +1,7 @@
 ECHO OFF
 cls
 
-set Local=C:\Users\Ricky\Documents\CrazyOsStep2
+set Local=%CD% rem Diretório
 cd %Local%
 
 setlocal enabledelayedexpansion

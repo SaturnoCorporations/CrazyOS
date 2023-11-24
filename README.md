@@ -5,10 +5,26 @@ Este projeto é feito completamente em assembly 16 bits e ainda está engatinhan
 Coisas que serão implementadas no CrazyOS:
 
 FAT16
+
 CrazyBrow<-Browser do crazy
+
 .cog(Crazy os game file)<-Sim o SO terá alguns gameszinhos na
 Loja,que será uma das ultimas coisas.
 
 # É open-source?
 
-Talvez será,mas no momento compartilharei somente algumas dependencias assembly,as codf(Crazy OS Dependence File)
+Sim!,mas é necessário deixar os créditos a Saturno Corporations.
+
+# Novidades da V2.0
+
+Por mais que não esteja completa,a versão 2.0 traz várias novidades,
+como a nova versão do Autogen(2.5),que não darei spoilers :-)
+
+# Bugs e erros
+
+A vm criada pelo autogen é instável,a lingua japonesa não foi 
+implementada ainda.
+
+Se achar outro erro,entre em contato:
+
+saturnocorporations@gmail.com
